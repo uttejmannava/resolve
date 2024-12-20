@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const blurToggle = document.getElementById("blurToggle");
     const hideDifficultyToggle = document.getElementById("hideDifficultyToggle");
   
-    chrome.storage.sync.get(["blurEnabled", "hideDifficultyToggle"], (data) => {
+    chrome.storage.sync.get(["blurEnabled", "hideDifficulty"], (data) => {
         blurToggle.checked = data.blurEnabled ?? true;
         hideDifficultyToggle.checked = data.hideDifficulty ?? true;
     });
