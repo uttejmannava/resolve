@@ -21,30 +21,47 @@ chrome.storage.sync.get("blurEnabled", (data) => {
   
     console.log("LeetCode Hider: Problem is solved. Applying blur...");
 
-    // apply blur
-    editor.style.position = "relative";
+    // Apply Gaussian blur to the editor
+    editor.style.filter = "blur(8px)";
+    editor.style.position = "relative"; // Ensure the editor itself is positioned for overlay placement
+
+    // Create an overlay
     const overlay = document.createElement("div");
+    const editorRect = editor.getBoundingClientRect(); // Get the editor's position and dimensions
     overlay.style.position = "absolute";
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = "100%";
-    overlay.style.height = "100%";
-    overlay.style.backgroundColor = "rgba(255, 255, 255, 0.95)"; // Increased opacity
-    overlay.style.zIndex = 100; // Ensure overlay is above all other content
+    overlay.style.top = `${editorRect.top}px`;
+    overlay.style.left = `${editorRect.left}px`;
+    overlay.style.width = `${editorRect.width}px`;
+    overlay.style.height = `${editorRect.height}px`;
+    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)"; // Dark semi-transparent overlay
+    overlay.style.zIndex = 1000; // Ensure overlay is above all other content
     overlay.style.display = "flex";
     overlay.style.flexDirection = "column";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
+    overlay.style.pointerEvents = "auto"; // do not allow clicks to pass through to the editor
     overlay.innerHTML = `
-        <h3 style="margin-bottom: 20px;">SOLVED BEFORE:</h3>
-        <div>
+        <h3 style="margin-bottom: 20px; color: white;">SOLVED BEFORE:</h3>
+        <div style="pointer-events: auto;"> <!-- Allow interaction with buttons -->
             <button id="showSolution" style="margin-right: 10px; background-color: lightgreen; padding: 10px 20px; border: none; cursor: pointer;">SHOW</button>
             <button id="clearSolution" style="background-color: lightcoral; padding: 10px 20px; border: none; cursor: pointer;">CLEAR</button>
         </div>
     `;
-    editor.appendChild(overlay);
 
-    console.log("LeetCode Hider: Overlay added. Waiting for user action...");
+    // Append the overlay to the body and position it over the editor
+    document.body.appendChild(overlay);
+
+    console.log("Overlay added above the blurred editor. Waiting for user action...");
+
+    // Adjust overlay position if the window resizes
+    window.addEventListener("resize", () => {
+        const updatedRect = editor.getBoundingClientRect();
+        overlay.style.top = `${updatedRect.top}px`;
+        overlay.style.left = `${updatedRect.left}px`;
+        overlay.style.width = `${updatedRect.width}px`;
+        overlay.style.height = `${updatedRect.height}px`;
+    });
+    console.log("Overlay added above the blurred editor. Waiting for user action...");
 
     // Button handlers
     overlay.querySelector("#showSolution").addEventListener("click", () => {
