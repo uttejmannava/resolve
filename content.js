@@ -1,45 +1,110 @@
-chrome.storage.sync.get("blurEnabled", (data) => {
-    console.log("LeetCode Hider: Checking if blur is enabled...");
-    if (!data.blurEnabled) {
-        console.log("LeetCode Hider: Blur is disabled. Exiting.");
+// chrome.storage.sync.get("hideDifficulty", (data) => {
+//     console.log("ReSolve: Checking if hide difficulty is enabled...");
+//     if (!data.hideDifficulty) {
+//         console.log("ReSolve: Hide difficulty is disabled.");
+//         return;
+//     }
+
+//     console.log("ReSolve: Hide difficulty is enabled. Modifying difficulty...");
+//     const difficulty = document.querySelector('div[class*="text-difficulty-"]');
+//     // other features
+//     if (!difficulty) {
+//         console.log("ReSolve: Difficulty not found. Exiting.");
+//         return;
+//     } else {
+//         difficulty.textContent = "🤷‍♂️"
+//         console.log("ReSolve: Difficulty modified.");
+//     }
+
+// });
+
+chrome.storage.sync.get("hideDifficulty", (data) => {
+    console.log("ReSolve: Checking if hide difficulty is enabled...");
+    if (!data.hideDifficulty) {
+        console.log("ReSolve: Hide difficulty is disabled.");
         return;
     }
 
-    console.log("LeetCode Hider: Blur is enabled. Searching for the editor...");
+    console.log("ReSolve: Hide difficulty is enabled. Hiding content temporarily...");
+
+    // Find the parent container
+    const parent = document.querySelectorAll('div.flex.gap-1')[9];
+    if (!parent) {
+        console.log("ReSolve: Parent container not found. Exiting.");
+        return;
+    }
+
+    // Hide the parent container to prevent flashing
+    parent.style.display = "none";
+
+    const checkAndModifyDifficulty = () => {
+        const difficulty = document.querySelector('div[class*="text-difficulty-"]');
+        if (difficulty) {
+            difficulty.textContent = "🤷‍♂️"; // Modify difficulty text
+            console.log("ReSolve: Difficulty modified.");
+
+            // Show the parent container after modification
+            parent.style.display = "";
+        } else {
+            // Retry until the element is found
+            setTimeout(checkAndModifyDifficulty, 50);
+        }
+    };
+
+    checkAndModifyDifficulty();
+});
+
+chrome.storage.sync.get("blurEnabled", (data) => {
+    console.log("ReSolve: Checking if blur is enabled...");
+    if (!data.blurEnabled) {
+        console.log("ReSolve: Blur is disabled. Exiting.");
+        return;
+    }
+
+    console.log("ReSolve: Blur is enabled. Searching for the editor...");
     const editor = document.getElementById('editor');
     if (!editor) {
-        console.log("LeetCode Hider: Code editor not found. Exiting.");
+        console.log("ReSolve: Code editor not found. Exiting.");
         return;
     }
-  
-    console.log("LeetCode Hider: Code editor found. Checking if the problem is solved...");
+
+    console.log("ReSolve: Code editor found. Checking if the problem is solved...");
     const isSolved = document.querySelector('svg.fill-none.stroke-current.text-message-success'); // check for green check beside solved text
     if (!isSolved) {
-        console.log("LeetCode Hider: Problem is not marked as solved. Exiting.");
+        console.log("ReSolve: Problem is not marked as solved. Exiting.");
         return;
     }
-  
-    console.log("LeetCode Hider: Problem is solved. Applying blur...");
 
-    // Apply Gaussian blur to the editor
-    editor.style.filter = "blur(8px)";
-    editor.style.position = "relative"; // Ensure the editor itself is positioned for overlay placement
+    console.log("ReSolve: Problem is solved. Applying blur...");
 
-    // Create an overlay
+    // Ensure the editor is positioned for overlay placement
+    editor.style.position = "relative";
+
+    // Apply backdrop filter for blur
+    const blurLayer = document.createElement("div");
+    blurLayer.style.position = "absolute";
+    blurLayer.style.top = 0;
+    blurLayer.style.left = 0;
+    blurLayer.style.width = "100%";
+    blurLayer.style.height = "100%";
+    blurLayer.style.backdropFilter = "blur(8px)";
+    blurLayer.style.backgroundColor = "rgba(0, 0, 0, 0.8)"; // Semi-transparent overlay
+    blurLayer.style.zIndex = 1; // Behind the overlay content but above the editor content
+    editor.appendChild(blurLayer);
+
+    // Create the overlay content
     const overlay = document.createElement("div");
-    const editorRect = editor.getBoundingClientRect(); // Get the editor's position and dimensions
     overlay.style.position = "absolute";
-    overlay.style.top = `${editorRect.top}px`;
-    overlay.style.left = `${editorRect.left}px`;
-    overlay.style.width = `${editorRect.width}px`;
-    overlay.style.height = `${editorRect.height}px`;
-    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)"; // Dark semi-transparent overlay
-    overlay.style.zIndex = 1000; // Ensure overlay is above all other content
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.zIndex = 2; // Above the blur layer
     overlay.style.display = "flex";
     overlay.style.flexDirection = "column";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
-    overlay.style.pointerEvents = "auto"; // do not allow clicks to pass through to the editor
+    overlay.style.pointerEvents = "auto"; // Enable interaction with overlay
     overlay.innerHTML = `
         <h3 style="margin-bottom: 20px; color: white;">SOLVED BEFORE:</h3>
         <div style="pointer-events: auto;"> <!-- Allow interaction with buttons -->
@@ -47,39 +112,43 @@ chrome.storage.sync.get("blurEnabled", (data) => {
             <button id="clearSolution" style="background-color: lightcoral; padding: 10px 20px; border: none; cursor: pointer;">CLEAR</button>
         </div>
     `;
+    editor.appendChild(overlay);
 
-    // Append the overlay to the body and position it over the editor
-    document.body.appendChild(overlay);
-
-    console.log("Overlay added above the blurred editor. Waiting for user action...");
-
-    // Adjust overlay position if the window resizes
-    window.addEventListener("resize", () => {
-        const updatedRect = editor.getBoundingClientRect();
-        overlay.style.top = `${updatedRect.top}px`;
-        overlay.style.left = `${updatedRect.left}px`;
-        overlay.style.width = `${updatedRect.width}px`;
-        overlay.style.height = `${updatedRect.height}px`;
-    });
-    console.log("Overlay added above the blurred editor. Waiting for user action...");
+    console.log("Overlay added inside the editor. Waiting for user action...");
 
     // Button handlers
     overlay.querySelector("#showSolution").addEventListener("click", () => {
-        console.log("LeetCode Hider: User clicked 'SHOW'. Removing blur...");
-        editor.style.filter = "none"; // Remove blur
-        overlay.remove(); // Remove overlay
+        console.log("ReSolve: User clicked 'SHOW'. Removing blur...");
+        blurLayer.remove();
+        overlay.remove();
     });
 
     overlay.querySelector("#clearSolution").addEventListener("click", () => {
-        console.log("LeetCode Hider: User clicked 'CLEAR'. Clearing code...");
-        const codeEditor = editor.querySelector(".CodeMirror-code"); // Actual code lines within the editor
-        if (codeEditor) {
-            console.log("LeetCode Hider: Code editor content cleared.");
-            codeEditor.innerHTML = ""; // Clear code
+        console.log("ReSolve: User clicked 'CLEAR'. Clearing code...");
+        const resetButton = editor.querySelectorAll('div.flex.items-center.gap-1 button')[3];
+
+        if (resetButton) {
+            resetButton.click();
+            console.log("ReSolve: Reset button clicked. Waiting for the confirm button...");
+    
+            setTimeout(() => { // accounts for small delay after clicking reset button
+                const confirmButton = document.querySelectorAll('div.mt-8.flex.justify-end button')[1];
+                if (confirmButton) {
+                    confirmButton.click();
+                    console.log("ReSolve: Confirm button clicked. Removing overlay...");
+                } else {
+                    console.log("ReSolve: Confirm button not found.");
+                }
+            }, 100);
         } else {
-            console.log("LeetCode Hider: Code editor content not found. Unable to clear.");
+            console.log("ReSolve: Reset button not found. Unable to clear code.");
         }
-        editor.style.filter = "none"; // Remove blur
-        overlay.remove(); // Remove overlay
+
+        setTimeout(() => {
+            blurLayer.remove();
+            overlay.remove();
+        }, 100);
+
+
     });
 });
