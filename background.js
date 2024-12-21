@@ -1,3 +1,3 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("LeetCode Hider installed!");
+    console.log("ReSolve: LeetCode Solution Hider installed!");
   });

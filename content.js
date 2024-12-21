@@ -27,23 +27,22 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
 
     console.log("ReSolve: Hide difficulty is enabled. Hiding content temporarily...");
 
-    // Find the parent container
+    // find parent container
     const parent = document.querySelectorAll('div.flex.gap-1')[9];
     if (parent) {
         console.log("ReSolve: Parent container found. Finding difficulty...");
-        // Hide the parent container to prevent flashing
+        // hide parent container temporarily
         parent.style.display = "none";
 
         const checkAndModifyDifficulty = () => {
             const difficulty = document.querySelector('div[class*="text-difficulty-"]');
             if (difficulty) {
-                difficulty.textContent = "🤷‍♂️"; // Modify difficulty text
+                difficulty.textContent = "🤷‍♂️";
                 console.log("ReSolve: Difficulty modified.");
 
-                // Show the parent container after modification
+                // unhide parent container
                 parent.style.display = "";
             } else {
-                // Retry until the element is found
                 setTimeout(checkAndModifyDifficulty, 50);
             }
         };
@@ -71,7 +70,7 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     }
 
     console.log("ReSolve: Code editor found. Checking if the problem is solved...");
-    const isSolved = document.querySelector('svg.fill-none.stroke-current.text-message-success'); // check for green check beside solved text
+    const isSolved = document.querySelector('svg.fill-none.stroke-current.text-message-success'); // find green check beside solved text
     if (!isSolved) {
         console.log("ReSolve: Problem is not marked as solved. Exiting.");
         return;
@@ -82,10 +81,8 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     // check light or dark mode
     const appearance = document.documentElement.className
 
-    // Ensure the editor is positioned for overlay placement
     editor.style.position = "relative";
 
-    // Apply backdrop filter for blur
     const blurLayer = document.createElement("div");
     blurLayer.style.position = "absolute";
     blurLayer.style.top = 0;
@@ -98,25 +95,24 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     blurLayer.style.zIndex = 1; // behind overlay, above editor
     editor.appendChild(blurLayer);
 
-    // Create the overlay content
     const overlay = document.createElement("div");
     overlay.style.position = "absolute";
     overlay.style.top = "50%";
     overlay.style.left = "50%";
-    overlay.style.transform = "translate(-50%, -50%)"; // Center the overlay
-    overlay.style.width = "300px"; // Adjust the width of the overlay
+    overlay.style.transform = "translate(-50%, -50%)";
+    overlay.style.width = "300px";
     overlay.style.padding = "20px";
-    overlay.style.borderRadius = "12px"; // Rounded corners for the overlay
-    overlay.style.backgroundColor = "#2c2c2c"; // Dark gray background to match the popup
-    overlay.style.fontFamily = "'Helvetica', sans-serif"; // Apply Helvetica font
-    overlay.style.fontWeight = "bold"; // Make the text bold
-    overlay.style.color = "#e0e0e0"; // Slightly off-white text to match the popup
-    overlay.style.zIndex = 2; // Above the blur layer
+    overlay.style.borderRadius = "12px";
+    overlay.style.backgroundColor = "#2c2c2c";
+    overlay.style.fontFamily = "'Helvetica', sans-serif";
+    overlay.style.fontWeight = "bold";
+    overlay.style.color = "#e0e0e0";
+    overlay.style.zIndex = 2;
     overlay.style.display = "flex";
     overlay.style.flexDirection = "column";
-    overlay.style.alignItems = "center"; // Center elements inside the overlay
-    overlay.style.justifyContent = "center"; // Center elements vertically
-    overlay.style.textAlign = "center"; // Center text inside the overlay
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.textAlign = "center";
     overlay.innerHTML = `
         <h3 style="margin-bottom: 20px; font-size: 1rem;">SOLVED BEFORE</h3>
         <div style="pointer-events: auto; display: flex; gap: 10px; flex-direction: row; align-items: center;">
@@ -125,13 +121,12 @@ chrome.storage.sync.get("blurEnabled", (data) => {
             <button id="clearSolution" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">CLEAR</button>
         </div>
     `;
-
     setTimeout(() => {
         editor.appendChild(overlay);
         console.log("ReSolve: Overlay added inside the editor. Waiting for user action...");
     }, 600);
 
-    // Button handlers
+    // button handlers
     overlay.querySelector("#showSolution").addEventListener("click", () => {
         console.log("ReSolve: User clicked 'SHOW'. Removing blur...");
         blurLayer.remove();
