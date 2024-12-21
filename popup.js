@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const closeButton = document.getElementById("closePopup");
+
+    closeButton.addEventListener("click", () => {
+        window.close();
+    });
+    
     const blurToggle = document.getElementById("blurToggle");
     const hideDifficultyToggle = document.getElementById("hideDifficultyToggle");
   

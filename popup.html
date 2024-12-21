@@ -1,34 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>LeetCode Hider</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReSolve</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 10px;
+      font-family: "Palatino", serif;
+      margin: 0;
+      padding: 20px;
       min-width: 200px;
+      background-color: #2c2c2c; /* Dark gray background */
+      color: #e0e0e0; /* Slightly off-white text */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 8px;
     }
-    .toggle {
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #e0e0e0; /* Slightly off-white */
+    }
+    .logo {
+      width: 32px; /* Half the original size */
+      height: 32px;
       margin-bottom: 10px;
     }
-    button {
+    .subtitle {
+      font-style: italic;
+      color: #bbbbbb; /* Lighter gray for the subtitle */
+      margin-bottom: 20px;
+    }
+    .toggle {
       width: 100%;
-      padding: 5px;
-      margin-top: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toggle label {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #3c3c3c; /* Slightly lighter gray */
+      padding: 10px;
+      border-radius: 8px; /* Rounded shapes */
+    }
+    .toggle input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: #4CAF50; /* Green accent color */
       cursor: pointer;
+    }
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #444444; /* Darker gray for the button */
+      color: #e0e0e0; /* Slightly off-white */
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .close-button:hover {
+      background: #555555; /* Slightly lighter on hover */
     }
   </style>
 </head>
 <body>
-  <h3>LeetCode Hider</h3>
+  <button class="close-button" id="closePopup">×</button>
+  <h3>ReSolve</h3>
+  <img src="icons/peeking_128.png" alt="ReSolve Logo" class="logo">
+  <div class="subtitle">(don't peek)</div>
   <div class="toggle">
     <label>
-        <input type="checkbox" id="blurToggle" />
-        Blur Solution
+      <input type="checkbox" id="blurToggle" />
+      Blur Solution
     </label>
     <label>
-        <input type="checkbox" id="hideDifficultyToggle" />
-        Hide Difficulty
+      <input type="checkbox" id="hideDifficultyToggle" />
+      Hide Difficulty
     </label>
   </div>
   <script src="popup.js"></script>

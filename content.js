@@ -31,27 +31,28 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
     const parent = document.querySelectorAll('div.flex.gap-1')[9];
     if (!parent) {
         console.log("ReSolve: Parent container not found. Exiting.");
-        return;
+
+        // Hide the parent container to prevent flashing
+        parent.style.display = "none";
+
+        const checkAndModifyDifficulty = () => {
+            const difficulty = document.querySelector('div[class*="text-difficulty-"]');
+            if (difficulty) {
+                difficulty.textContent = "🤷‍♂️"; // Modify difficulty text
+                console.log("ReSolve: Difficulty modified.");
+
+                // Show the parent container after modification
+                parent.style.display = "";
+            } else {
+                // Retry until the element is found
+                setTimeout(checkAndModifyDifficulty, 50);
+            }
+        };
+
+        checkAndModifyDifficulty();
     }
 
-    // Hide the parent container to prevent flashing
-    parent.style.display = "none";
-
-    const checkAndModifyDifficulty = () => {
-        const difficulty = document.querySelector('div[class*="text-difficulty-"]');
-        if (difficulty) {
-            difficulty.textContent = "🤷‍♂️"; // Modify difficulty text
-            console.log("ReSolve: Difficulty modified.");
-
-            // Show the parent container after modification
-            parent.style.display = "";
-        } else {
-            // Retry until the element is found
-            setTimeout(checkAndModifyDifficulty, 50);
-        }
-    };
-
-    checkAndModifyDifficulty();
+    
 });
 
 chrome.storage.sync.get("blurEnabled", (data) => {
