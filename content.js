@@ -29,9 +29,8 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
 
     // Find the parent container
     const parent = document.querySelectorAll('div.flex.gap-1')[9];
-    if (!parent) {
-        console.log("ReSolve: Parent container not found. Exiting.");
-
+    if (parent) {
+        console.log("ReSolve: Parent container found. Finding difficulty...");
         // Hide the parent container to prevent flashing
         parent.style.display = "none";
 
@@ -50,6 +49,8 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
         };
 
         checkAndModifyDifficulty();
+    } else {
+        console.log("ReSolve: Parent container not found. Exiting.");
     }
 
     
@@ -100,25 +101,28 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     // Create the overlay content
     const overlay = document.createElement("div");
     overlay.style.position = "absolute";
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = "100%";
-    overlay.style.height = "100%";
-    overlay.style.zIndex = 2; // placed above blur layer
+    overlay.style.top = "50%";
+    overlay.style.left = "50%";
+    overlay.style.transform = "translate(-50%, -50%)"; // Center the overlay
+    overlay.style.width = "300px"; // Adjust the width of the overlay
+    overlay.style.padding = "20px";
+    overlay.style.borderRadius = "12px"; // Rounded corners for the overlay
+    overlay.style.backgroundColor = "#2c2c2c"; // Dark gray background to match the popup
+    overlay.style.fontFamily = "'Helvetica', sans-serif"; // Apply Helvetica font
+    overlay.style.fontWeight = "bold"; // Make the text bold
+    overlay.style.color = "#e0e0e0"; // Slightly off-white text to match the popup
+    overlay.style.zIndex = 2; // Above the blur layer
     overlay.style.display = "flex";
     overlay.style.flexDirection = "column";
-    overlay.style.alignItems = "center";
-    overlay.style.justifyContent = "center";
-    overlay.style.pointerEvents = "auto"; // enable interaction with overlay
-
-    const textColor = appearance === "dark" ? "white" : "black"
-    const buttonTextColor = appearance === "dark" ? "white" : "black"
-
+    overlay.style.alignItems = "center"; // Center elements inside the overlay
+    overlay.style.justifyContent = "center"; // Center elements vertically
+    overlay.style.textAlign = "center"; // Center text inside the overlay
     overlay.innerHTML = `
-        <h3 style="margin-bottom: 20px; color: ${textColor};">SOLVED BEFORE:</h3>
-        <div style="pointer-events: auto;"> <!-- Allow interaction with buttons -->
-            <button id="showSolution" style="margin-right: 10px; background-color: lightgreen; color: ${buttonTextColor}; padding: 10px 20px; border: none; cursor: pointer;">SHOW</button>
-            <button id="clearSolution" style="background-color: lightcoral; color: ${buttonTextColor}; padding: 10px 20px; border: none; cursor: pointer;">CLEAR</button>
+        <h3 style="margin-bottom: 20px; font-size: 1rem;">SOLVED BEFORE</h3>
+        <div style="pointer-events: auto; display: flex; gap: 10px; flex-direction: row; align-items: center;">
+            <!-- Adjust button colors to improve contrast -->
+            <button id="showSolution" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">SHOW</button>
+            <button id="clearSolution" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">CLEAR</button>
         </div>
     `;
 
