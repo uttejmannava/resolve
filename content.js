@@ -77,6 +77,9 @@ chrome.storage.sync.get("blurEnabled", (data) => {
 
     console.log("ReSolve: Problem is solved. Applying blur...");
 
+    // check light or dark mode
+    const appearance = document.documentElement.className
+
     // Ensure the editor is positioned for overlay placement
     editor.style.position = "relative";
 
@@ -88,8 +91,9 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     blurLayer.style.width = "100%";
     blurLayer.style.height = "100%";
     blurLayer.style.backdropFilter = "blur(8px)";
-    blurLayer.style.backgroundColor = "rgba(0, 0, 0, 0.8)"; // Semi-transparent overlay
-    blurLayer.style.zIndex = 1; // Behind the overlay content but above the editor content
+    // bg black or white depending on appearance
+    blurLayer.style.backgroundColor = appearance === "dark" ? "rgba(0, 0, 0, 0.7)" : "rgba(255, 255, 255, 0.4)"
+    blurLayer.style.zIndex = 1; // behind overlay, above editor
     editor.appendChild(blurLayer);
 
     // Create the overlay content
@@ -99,22 +103,28 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     overlay.style.left = 0;
     overlay.style.width = "100%";
     overlay.style.height = "100%";
-    overlay.style.zIndex = 2; // Above the blur layer
+    overlay.style.zIndex = 2; // placed above blur layer
     overlay.style.display = "flex";
     overlay.style.flexDirection = "column";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
-    overlay.style.pointerEvents = "auto"; // Enable interaction with overlay
+    overlay.style.pointerEvents = "auto"; // enable interaction with overlay
+
+    const textColor = appearance === "dark" ? "white" : "black"
+    const buttonTextColor = appearance === "dark" ? "white" : "black"
+
     overlay.innerHTML = `
-        <h3 style="margin-bottom: 20px; color: white;">SOLVED BEFORE:</h3>
+        <h3 style="margin-bottom: 20px; color: ${textColor};">SOLVED BEFORE:</h3>
         <div style="pointer-events: auto;"> <!-- Allow interaction with buttons -->
-            <button id="showSolution" style="margin-right: 10px; background-color: lightgreen; padding: 10px 20px; border: none; cursor: pointer;">SHOW</button>
-            <button id="clearSolution" style="background-color: lightcoral; padding: 10px 20px; border: none; cursor: pointer;">CLEAR</button>
+            <button id="showSolution" style="margin-right: 10px; background-color: lightgreen; color: ${buttonTextColor}; padding: 10px 20px; border: none; cursor: pointer;">SHOW</button>
+            <button id="clearSolution" style="background-color: lightcoral; color: ${buttonTextColor}; padding: 10px 20px; border: none; cursor: pointer;">CLEAR</button>
         </div>
     `;
-    editor.appendChild(overlay);
 
-    console.log("Overlay added inside the editor. Waiting for user action...");
+    setTimeout(() => {
+        editor.appendChild(overlay);
+        console.log("ReSolve: Overlay added inside the editor. Waiting for user action...");
+    }, 600);
 
     // Button handlers
     overlay.querySelector("#showSolution").addEventListener("click", () => {
