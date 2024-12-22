@@ -1,23 +1,3 @@
-// chrome.storage.sync.get("hideDifficulty", (data) => {
-//     console.log("ReSolve: Checking if hide difficulty is enabled...");
-//     if (!data.hideDifficulty) {
-//         console.log("ReSolve: Hide difficulty is disabled.");
-//         return;
-//     }
-
-//     console.log("ReSolve: Hide difficulty is enabled. Modifying difficulty...");
-//     const difficulty = document.querySelector('div[class*="text-difficulty-"]');
-//     // other features
-//     if (!difficulty) {
-//         console.log("ReSolve: Difficulty not found. Exiting.");
-//         return;
-//     } else {
-//         difficulty.textContent = "🤷‍♂️"
-//         console.log("ReSolve: Difficulty modified.");
-//     }
-
-// });
-
 chrome.storage.sync.get("hideDifficulty", (data) => {
     console.log("ReSolve: Checking if hide difficulty is enabled...");
     if (!data.hideDifficulty) {
@@ -25,35 +5,55 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
         return;
     }
 
-    console.log("ReSolve: Hide difficulty is enabled. Hiding content temporarily...");
-
-    // find parent container
-    const parent = document.querySelectorAll('div.flex.gap-1')[9];
-    if (parent) {
-        console.log("ReSolve: Parent container found. Finding difficulty...");
-        // hide parent container temporarily
-        parent.style.display = "none";
-
-        const checkAndModifyDifficulty = () => {
-            const difficulty = document.querySelector('div[class*="text-difficulty-"]');
-            if (difficulty) {
-                difficulty.textContent = "🤷‍♂️";
-                console.log("ReSolve: Difficulty modified.");
-
-                // unhide parent container
-                parent.style.display = "";
-            } else {
-                setTimeout(checkAndModifyDifficulty, 50);
-            }
-        };
-
-        checkAndModifyDifficulty();
+    console.log("ReSolve: Hide difficulty is enabled. Modifying difficulty...");
+    const difficulty = document.querySelector('div[class*="text-difficulty-"]');
+    // other features
+    if (!difficulty) {
+        console.log("ReSolve: Difficulty not found. Exiting.");
+        return;
     } else {
-        console.log("ReSolve: Parent container not found. Exiting.");
+        difficulty.textContent = "🤷‍♂️"
+        console.log("ReSolve: Difficulty modified.");
     }
 
-    
 });
+
+// chrome.storage.sync.get("hideDifficulty", (data) => {
+//     console.log("ReSolve: Checking if hide difficulty is enabled...");
+//     if (!data.hideDifficulty) {
+//         console.log("ReSolve: Hide difficulty is disabled.");
+//         return;
+//     }
+
+//     console.log("ReSolve: Hide difficulty is enabled. Hiding content temporarily...");
+
+//     // find parent container
+//     const parent = document.querySelectorAll('div.flex.gap-1')[9];
+//     if (parent) {
+//         console.log("ReSolve: Parent container found. Finding difficulty...");
+//         // hide parent container temporarily
+//         parent.style.display = "none";
+
+//         const checkAndModifyDifficulty = () => {
+//             const difficulty = document.querySelector('div[class*="text-difficulty-"]');
+//             if (difficulty) {
+//                 difficulty.textContent = "🤷‍♂️";
+//                 console.log("ReSolve: Difficulty modified.");
+
+//                 // unhide parent container
+//                 parent.style.display = "";
+//             } else {
+//                 setTimeout(checkAndModifyDifficulty, 50);
+//             }
+//         };
+
+//         checkAndModifyDifficulty();
+//     } else {
+//         console.log("ReSolve: Parent container not found. Exiting.");
+//     }
+
+    
+// });
 
 chrome.storage.sync.get("blurEnabled", (data) => {
     console.log("ReSolve: Checking if blur is enabled...");
@@ -158,7 +158,6 @@ chrome.storage.sync.get("blurEnabled", (data) => {
             blurLayer.remove();
             overlay.remove();
         }, 100);
-
 
     });
 });
