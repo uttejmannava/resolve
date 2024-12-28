@@ -7,7 +7,7 @@ chrome.storage.sync.get("hideDifficulty", (data) => {
 
     console.log("ReSolve: Hide difficulty is enabled. Modifying difficulty...");
     const difficulty = document.querySelector('div[class*="text-difficulty-"]');
-    // other features
+
     if (!difficulty) {
         console.log("ReSolve: Difficulty not found. Exiting.");
         return;
@@ -121,6 +121,7 @@ chrome.storage.sync.get("blurEnabled", (data) => {
             <button id="clearSolution" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">CLEAR</button>
         </div>
     `;
+
     setTimeout(() => {
         editor.appendChild(overlay);
         console.log("ReSolve: Overlay added inside the editor. Waiting for user action...");
