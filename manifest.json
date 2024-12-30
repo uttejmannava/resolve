@@ -3,7 +3,7 @@
   "name": "ReSolve: LeetCode Solution Hider",
   "version": "1.0",
   "description": "Blur previously solved LeetCode problems, avoid seeing them by accident.",
-  "permissions": ["storage", "scripting", "activeTab"],
+  "permissions": ["storage"],
   "host_permissions": ["https://leetcode.com/*"],
   "action": {
     "default_popup": "popup.html",
