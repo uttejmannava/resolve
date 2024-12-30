@@ -114,7 +114,7 @@ chrome.storage.sync.get("blurEnabled", (data) => {
     overlay.style.justifyContent = "center";
     overlay.style.textAlign = "center";
     overlay.innerHTML = `
-        <h3 style="margin-bottom: 20px; font-size: 1rem;">SOLVED BEFORE</h3>
+        <h3 style="margin-bottom: 20px; font-size: 1rem; color: white;">SOLVED BEFORE</h3>
         <div style="pointer-events: auto; display: flex; gap: 10px; flex-direction: row; align-items: center;">
             <!-- Adjust button colors to improve contrast -->
             <button id="showSolution" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">SHOW</button>
