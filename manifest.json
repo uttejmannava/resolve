@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ReSolve: LeetCode Solution Hider",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Blur previously solved LeetCode problems, avoid seeing them by accident.",
   "permissions": ["storage"],
   "host_permissions": ["https://leetcode.com/*"],
