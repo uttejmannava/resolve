@@ -136,7 +136,7 @@ chrome.storage.sync.get("blurEnabled", (data) => {
 
     overlay.querySelector("#clearSolution").addEventListener("click", () => {
         console.log("ReSolve: User clicked 'CLEAR'. Clearing code...");
-        const resetButton = editor.querySelectorAll('div.flex.items-center.gap-1 button')[3];
+        const resetButton = editor.querySelectorAll('div.flex.items-center.gap-1 button')[2];
 
         if (resetButton) {
             resetButton.click();
