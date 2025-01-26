@@ -136,8 +136,12 @@ chrome.storage.sync.get("blurEnabled", (data) => {
 
     overlay.querySelector("#clearSolution").addEventListener("click", () => {
         console.log("ReSolve: User clicked 'CLEAR'. Clearing code...");
-        const resetButton = editor.querySelectorAll('div.flex.items-center.gap-1 button')[2];
-
+        const resetButton = Array.from(
+            editor.querySelectorAll('div.flex.items-center.gap-1 button')
+          ).find(button =>
+            button.querySelector('div > svg[data-icon="arrow-rotate-left"]')
+          );
+        
         if (resetButton) {
             resetButton.click();
             console.log("ReSolve: Reset button clicked. Waiting for the confirm button...");
