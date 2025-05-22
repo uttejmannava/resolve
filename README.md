@@ -11,8 +11,8 @@ ReSolve is a Chrome extension designed to enhance your LeetCode experience by au
 
 ---
 
-## Installation and Usage
-(pending publish)
+## Download here!
+https://chromewebstore.google.com/detail/resolve-leetcode-solution/dicklcfchlljdffnelnpcihgjiempffj?authuser=0&hl=en-GB
 
 ---
 
